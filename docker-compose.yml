@@ -1,6 +1,6 @@
 services:
   moodleapp:
-    image: moodleapp:1.0
+    image: oluwaseuna/runmoodle:1.0
     container_name: moodleapp
     ports:
       - 80:80
