@@ -40,12 +40,24 @@ services:
     depends_on:
       - moodleapp
     ports:
-      - "80:80"
-      - "443:443"
+      - "81:80"
+      - "444:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./letsencrypt:/etc/letsencrypt
       - ./nginx/html:/var/www/html
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./letsencrypt:/etc/letsencrypt
+      - ./nginx/html:/var/www/html
+    entrypoint: >
+      sh -c "certbot certonly --webroot -w /var/www/html
+      -d putme.run.edu.ng
+      --email ict@run.edu.ng
+      --agree-tos --non-interactive"
 
 volumes:
   clouddbdata:

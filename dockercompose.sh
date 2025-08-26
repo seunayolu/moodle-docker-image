@@ -6,3 +6,5 @@ docker compose run --rm certbot certonly --webroot \
   --no-eff-email
 
 mkdir -p nginx/conf.d nginx/html letsencrypt
+
+docker compose restart nginx
