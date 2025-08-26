@@ -2,13 +2,13 @@ services:
   moodleapp:
     image: oluwaseuna/runmoodle:1.0
     container_name: moodleapp
-    ports:
-      - 80:80
+    expose:
+      - "80"  
     volumes:
       - moodledata:/var/www/moodledata
     depends_on:
       - moodledb
-  # MySQL DB Service
+
   moodledb:
     image: mysql:8.4.5
     container_name: clouddb
@@ -25,7 +25,7 @@ services:
     container_name: phpmyadmin
     restart: always
     ports:
-      - "8081:80"
+      - "8081:8081"
     environment:
       PMA_HOST: clouddb
       PMA_PORT: 3306
@@ -33,6 +33,19 @@ services:
       PMA_PASSWORD: ${MYSQL_PASSWORD}
     depends_on:
       - moodledb
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    depends_on:
+      - moodleapp
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./letsencrypt:/etc/letsencrypt
+      - ./nginx/html:/var/www/html
 
 volumes:
   clouddbdata:
